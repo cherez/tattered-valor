@@ -3,6 +3,8 @@ import tempfile
 import shutil
 from collections import namedtuple
 import os
+import time
+import re
 
 Game = namedtuple('Game', ['host', 'number'])
 
@@ -13,6 +15,8 @@ class Gladiator(object):
     self.prepared = False
     self.done = False
     self.crashed = False
+    self.won = False
+    self.log = None
 
     self.directory = tempfile.mkdtemp(prefix='gladiator')
 
@@ -69,6 +73,9 @@ class Gladiator(object):
       self.log = log_path
     return True
 
+  def terminate(self):
+    if self.process:
+      self.process.terminate()
 
 
 class GitGladiator(Gladiator):
@@ -94,3 +101,69 @@ class GitGladiator(Gladiator):
       return False
     self.prepared = True
     return True
+
+class Match(object):
+  def __init__(self, c1, c2, game):
+    self.competitors = c1, c2
+    self.game = game
+    self.status = 'new'
+    self.winner = None
+
+    self.make_gladiators()
+
+  def make_gladiators(self):
+    self.gladiators = []
+    #TODO: Support for gladiators besides the git kind
+    for i in self.competitors:
+      args = i.split(' ')
+      #first arg is a signature of the type
+      args = args[1:]
+      self.gladiators.append(GitGladiator(*args))
+
+  def prepare(self):
+    self.status = 'preparing'
+    for i in range(2):
+      if not self.gladiators[i].prepare():
+        self.winner = 1-i
+        return False
+
+    self.status = 'building'
+    for i in range(2):
+      if not self.gladiators[i].build():
+        self.winner = 1-i
+        return False
+    return True
+
+  def run(self):
+    self.status = 'joining'
+    for i in range(2):
+      #give each client sufficient time to connect
+      time.sleep(10)
+      if not self.gladiators[i].run(self.game):
+        self.winner = 1-i
+        return False
+
+    self.status = 'playing'
+    while self.winner is None:
+      time.sleep(1)
+      for i in range(2):
+        g = self.gladiators[i]
+        if self.gladiators[i].poll():
+          if g.crashed:
+            self.winner = 1-i
+            break
+          else:
+            self.check_winner(g.log)
+            break
+    for g in self.gladiators:
+      g.terminate()
+    return self.winner
+
+  def check_winner(self, logfile):
+    log = file(logfile, 'r').read()
+    match = re.search("\"game-winner\" (\d+) \"[^\"]+\" (\d+)", log)
+    if match:
+      self.winner = int(match.groups()[1])
+    else:
+      self.winner = -1
+    return self.winner
