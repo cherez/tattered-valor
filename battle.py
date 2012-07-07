@@ -75,8 +75,10 @@ class Gladiator(object):
 
   def terminate(self):
     if self.process:
-      self.process.terminate()
-
+      try:
+        self.process.terminate()
+      except OSError:
+        pass
 
 class GitGladiator(Gladiator):
   def __init__(self, repository, commit):
@@ -138,7 +140,7 @@ class Match(object):
     self.status = 'joining'
     for i in range(2):
       #give each client sufficient time to connect
-      time.sleep(10)
+      time.sleep(2)
       if not self.gladiators[i].run(self.game):
         self.winner = 1-i
         return False
