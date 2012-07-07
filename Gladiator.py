@@ -1,10 +1,22 @@
 import subprocess
+import tempfile
+import shutil
 
 class Gladiator(object):
   def __init__(self):
     self.built = False
     self.process = None
     self.prepared = False
+
+    self.directory = tempfile.mkdtemp()
+
+  def __del__(self):
+    try:
+      shutil.rmtree(self.directory)
+    except OSError:
+      #not much to do here, I suppose
+      #worth looking back here if this becomes an issue
+      pass
 
   def prepare(self):
     raise NotImplementedError()
