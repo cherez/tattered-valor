@@ -66,7 +66,6 @@ class Scheduler(object):
       command = input("> ")
       command = command.split(' ')
       #TODO: Add interface to make commands.
-      print(command)
       if command[0] == 'exit':
         print('Exiting')
         print('This will take until the last currently running game completes.')
