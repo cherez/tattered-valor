@@ -1,6 +1,9 @@
 import subprocess
 import tempfile
 import shutil
+from collections import namedtuple
+
+Game = namedtuple('Game', ['host', 'number'])
 
 class Gladiator(object):
   def __init__(self):
@@ -8,7 +11,7 @@ class Gladiator(object):
     self.process = None
     self.prepared = False
 
-    self.directory = tempfile.mkdtemp()
+    self.directory = tempfile.mkdtemp(prefix='gladiator')
 
   def __del__(self):
     try:
