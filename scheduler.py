@@ -12,6 +12,7 @@ class MatchThread(threading.Thread):
     self.match = match
     threading.Thread.__init__(self)
 
+
   def run(self):
     self.match.prepare()
     if self.match.winner:
@@ -24,7 +25,7 @@ class Scheduler(object):
     self.matches = []
 
   def load_competitors(self):
-    lines = file('competitors.txt', 'r').readlines()
+    lines = open('competitors.txt', 'r').readlines()
     lines = [i.strip() for i in lines]
     self.competitors = list(set(lines))
 
@@ -48,13 +49,32 @@ class Scheduler(object):
         new.start()
 
       time.sleep(1)
-      self.exit = True
       self.load_competitors()
 
       done = [i for i in self.matches if not i.is_alive()]
       for i in done:
         self.process_match(i.match)
         self.matches.remove(i)
+
+  def start_cli(self):
+    t = threading.Thread(target = self.cli)
+    t.daemon = True
+    t.start()
+
+  def cli(self):
+    while True:
+      command = input("> ")
+      command = command.split(' ')
+      #TODO: Add interface to make commands.
+      print(command)
+      if command[0] == 'exit':
+        print('Exiting')
+        print('This will take until the last currently running game completes.')
+        self.exit = True
+      else:
+        print('Unrecognized command:', command)
+
+
 
 class RandomScheduler(Scheduler):
   """A simple scheduler for testing.

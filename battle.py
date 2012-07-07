@@ -34,11 +34,11 @@ class Gladiator(object):
   def build(self):
     assert self.prepared
     subprocess.call(['make', 'clean'], cwd=self.directory,
-        stdout=file("/dev/null", "w"),
+        stdout=open("/dev/null", "w"),
         stderr=subprocess.STDOUT)
 
     result = subprocess.call(['make'], cwd=self.directory,
-        stdout=file("/dev/null", "w"),
+        stdout=open("/dev/null", "w"),
         stderr=subprocess.STDOUT) == 0
 
     if result:
@@ -55,7 +55,7 @@ class Gladiator(object):
     self.game = game
 
     self.process = subprocess.Popen(['bash', 'run', game.host, game.number],
-        stdout=file('/dev/null', 'w'),
+        stdout=open('/dev/null', 'w'),
         stderr=subprocess.STDOUT,
         cwd=self.directory)
     return True
@@ -91,12 +91,12 @@ class GitGladiator(Gladiator):
       return True
     result = subprocess.call(['git', 'clone',
       self.repository, self.directory],
-      stdout=file('/dev/null', 'w'),
+      stdout=open('/dev/null', 'w'),
       stderr=subprocess.STDOUT)
     if result != 0:
       return False
     result = subprocess.call(['git', 'checkout', self.commit],
-        stdout=file('/dev/null', 'w'),
+        stdout=open('/dev/null', 'w'),
         stderr=subprocess.STDOUT,
         cwd=self.directory)
     if result != 0:
@@ -162,7 +162,7 @@ class Match(object):
     return self.winner
 
   def check_winner(self, logfile):
-    log = file(logfile, 'r').read()
+    log = open(logfile, 'r').read()
     match = re.search("\"game-winner\" (\d+) \"[^\"]+\" (\d+)", log)
     if match:
       self.winner = int(match.groups()[1])
