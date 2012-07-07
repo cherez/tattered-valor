@@ -2,6 +2,7 @@ import subprocess
 import tempfile
 import shutil
 from collections import namedtuple
+import os
 
 Game = namedtuple('Game', ['host', 'number'])
 
@@ -10,6 +11,8 @@ class Gladiator(object):
     self.built = False
     self.process = None
     self.prepared = False
+    self.done = False
+    self.crashed = False
 
     self.directory = tempfile.mkdtemp(prefix='gladiator')
 
@@ -45,11 +48,27 @@ class Gladiator(object):
       if not self.build:
         return False
 
+    self.game = game
+
     self.process = subprocess.Popen(['bash', 'run', game.host, game.number],
         stdout=file('/dev/null', 'w'),
         stderr=subprocess.STDOUT,
         cwd=self.directory)
     return True
+
+  def poll(self):
+    assert self.process
+    result = self.process.poll()
+    if result is None:
+      return False
+    self.done = True
+    log_path = os.path.join(self.directory, 'python', '%s.gamelog' % self.game.number)
+    if not os.path.exists(log_path):
+      self.crashed = True
+    else:
+      self.log = log_path
+    return True
+
 
 
 class GitGladiator(Gladiator):
