@@ -45,7 +45,7 @@ class Scheduler(object):
           break
         new = MatchThread(new)
         self.matches.append(new)
-        new.run()
+        new.start()
 
       time.sleep(1)
       self.exit = True

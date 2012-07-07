@@ -1,2 +1,2 @@
-matches = 1
+matches = 4
 host = 'localhost'
