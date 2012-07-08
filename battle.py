@@ -110,6 +110,7 @@ class Match(object):
     self.game = game
     self.status = 'new'
     self.winner = None
+    self.log = None
 
     self.make_gladiators()
 
@@ -155,14 +156,15 @@ class Match(object):
             self.winner = 1-i
             break
           else:
-            self.check_winner(g.log)
+            self.log = g.log
+            self.check_winner()
             break
     for g in self.gladiators:
       g.terminate()
     return self.winner
 
-  def check_winner(self, logfile):
-    log = open(logfile, 'r').read()
+  def check_winner(self):
+    log = open(self.log, 'r').read()
     match = re.search("\"game-winner\" (\d+) \"[^\"]+\" (\d+)", log)
     if match:
       self.winner = int(match.groups()[1])

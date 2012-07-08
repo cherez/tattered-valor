@@ -23,11 +23,12 @@ class Scheduler(object):
   def __init__(self):
     self.exit = False
     self.matches = []
+    self.load_competitors()
 
   def load_competitors(self):
     lines = open('competitors.txt', 'r').readlines()
     lines = [i.strip() for i in lines]
-    self.competitors = list(set(lines))
+    self.competitors = sorted(set(lines))
 
   def schedule_match(self):
     raise NotImplementedError()
