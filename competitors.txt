@@ -1,2 +1,4 @@
-git /home/cherez/programs/megaminer/9/the-machine master
-git /home/cherez/programs/megaminer/9/the-machine Juice
+git git://github.com/cherez/the-machine.git final
+git git://github.com/cherez/the-machine.git Juice
+git git://github.com/cherez/the-machine.git Priority
+git git://github.com/cherez/the-machine.git meh_mines

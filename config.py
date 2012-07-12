@@ -1,3 +1,3 @@
-matches = 4
+matches = 8
 host = 'localhost'
 scheduler = 'roundrobin'
