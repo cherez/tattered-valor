@@ -3,6 +3,7 @@ import config
 import time
 import threading
 import random
+from competitor import Competitor
 
 def next_game():
   return str(random.randrange(2**31-1))
@@ -28,7 +29,8 @@ class Scheduler(object):
   def load_competitors(self):
     lines = open('competitors.txt', 'r').readlines()
     lines = [i.strip() for i in lines]
-    self.competitors = sorted(set(lines))
+    lines = sorted(set(lines))
+    self.competitors = [Competitor.from_string(i) for i in lines]
 
   def schedule_match(self):
     raise NotImplementedError()

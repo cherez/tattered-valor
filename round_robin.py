@@ -23,6 +23,7 @@ class RoundRobinData(object):
     self.pairings = {}
 
   def get_pairing(self, p1, p2):
+    p1, p2 = sorted(str(i) for i in (p1, p2))
     index = (p1, p2)
     if index not in self.pairings:
       pairing = RoundRobinPairing()
@@ -43,8 +44,7 @@ class RoundRobinScheduler(scheduler.Scheduler):
     winner = match.competitors[match.winner]
     game = RoundRobinGame(number, match.competitors[0], match.competitors[1], winner)
 
-    competitors = sorted(match.competitors)
-    pairing = self.data.get_pairing(*competitors)
+    pairing = self.data.get_pairing(*match.competitors)
     if winner == pairing.p1:
       pairing.p1wins += 1
     else:
@@ -93,8 +93,8 @@ class RoundRobinScheduler(scheduler.Scheduler):
     matrix = [['' for i in range(len(self.competitors)+2)] for j in range(len(self.competitors)+1)]
 
     for i, x in enumerate(rankings):
-      matrix[i+1][0] = self.competitors[x]
-      matrix[0][i+1] = self.competitors[x]
+      matrix[i+1][0] = str(self.competitors[x])
+      matrix[0][i+1] = str(self.competitors[x])
       matrix[i+1][-1] = str(sum(values[x]))
 
       for j, y in enumerate(rankings):

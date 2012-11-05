@@ -19,13 +19,7 @@ class Match(object):
     self.make_gladiators()
 
   def make_gladiators(self):
-    self.gladiators = []
-    #TODO: Support for gladiators besides the git kind
-    for i in self.competitors:
-      args = i.split(' ')
-      #first arg is a signature of the type
-      args = args[1:]
-      self.gladiators.append(self.type(*args))
+    self.gladiators = [i.make_gladiator() for i in self.competitors]
 
   def prepare(self):
     self.status = 'preparing'
