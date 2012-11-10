@@ -1,3 +1,4 @@
+import round_robin
 matches = 8
 host = 'localhost'
-scheduler = 'roundrobin'
+scheduler = round_robin.RoundRobinScheduler()
