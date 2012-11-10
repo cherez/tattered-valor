@@ -101,7 +101,7 @@ class GitGladiator(Gladiator):
     return True
 
 class GenomeGladiator(GitGladiator):
-  def init__(self, repository, commit, genome):
+  def __init__(self, repository, commit, genome):
     self.genome = genome
     GitGladiator.__init__(self, repository, commit)
 
