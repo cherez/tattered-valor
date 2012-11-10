@@ -100,7 +100,7 @@ class GitGladiator(Gladiator):
     self.prepared = True
     return True
 
-class BioGladiator(GitGladiator):
+class GenomeGladiator(GitGladiator):
   def init__(self, repository, commit, genome):
     self.genome = genome
     GitGladiator.__init__(self, repository, commit)

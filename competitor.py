@@ -1,4 +1,4 @@
-from gladiator import GitGladiator
+from gladiator import GitGladiator, GenomeGladiator
 class Competitor(object):
   def __init__(self):
     pass
@@ -26,3 +26,12 @@ class GitCompetitor(Competitor):
   def __str__(self):
     return "git %s %s" % (self.repository, self.commit)
 
+class GenomeCompetitor(Competitor):
+  def __init__(self, repository, commit, genome):
+    self.repository = repository
+    self.commit = commit
+    self.genome = genome
+    Competitor.__init__(self)
+
+  def make_gladiator(self):
+    return GenomeGladiator(self.repository, self.commit, self.genome)
