@@ -109,9 +109,6 @@ class GenomeGladiator(GitGladiator):
     result = GitGladiator.prepare(self)
     if not result:
       return False
-    try:
-      out = open(os.path.join(self.directory, 'genome'), 'w')
-      pickle.dump(self.genome.value, out)
-    except:
-      return False
+    out = open(os.path.join(self.directory, 'python', 'genome'), 'wb')
+    pickle.dump(self.genome, out, 0)
     return True

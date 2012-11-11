@@ -63,13 +63,14 @@ class CounterScheduler(scheduler.Scheduler):
     f = open('counter/results/%s-%s %s' %
         (competitor.wins, self.match_count - competitor.wins, competitor.id),
         'wb')
-    pickle.dump(competitor.genome, f)
+    print(competitor.genome)
+    pickle.dump(competitor.genome, f, 0)
 
   def make_competitor(self):
     genome = self.genome()
     self.competitor = CounterCompetitor(
         self.template.repository,
         self.template.commit,
-        self.genome.value)
+        genome.value)
 
 
